@@ -7,7 +7,7 @@ interface SerpResult {
 }
 
 export async function POST(req: NextRequest) {
-  const { skills, qualifications, experiences, location } = await req.json()
+  const { skills, qualifications, experiences, location, openToWork } = await req.json()
 
   const apiKey = process.env.SERPAPI_KEY
   if (!apiKey || apiKey === 'your_serpapi_key_here') {
@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
   // Build Google search query targeting LinkedIn profiles
   const quoted = allTerms.map((t: string) => `"${t}"`).join(' ')
   const locationTerm = location?.trim() ? ` "${location.trim()}"` : ''
-  const query = `site:linkedin.com/in ${quoted}${locationTerm}`
+  const openToWorkTerm = openToWork ? ' "#OpenToWork"' : ''
+  const query = `site:linkedin.com/in ${quoted}${locationTerm}${openToWorkTerm}`
 
   try {
     const url = new URL('https://serpapi.com/search.json')

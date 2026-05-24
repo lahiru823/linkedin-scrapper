@@ -19,6 +19,7 @@ export default function Home() {
   const [qualifications, setQualifications] = useState<string[]>([])
   const [experiences, setExperiences] = useState<string[]>([])
   const [location, setLocation] = useState('Sri Lanka')
+  const [openToWork, setOpenToWork] = useState(false)
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -61,7 +62,7 @@ export default function Home() {
       const res = await fetch('/api/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ skills, qualifications, experiences, location }),
+        body: JSON.stringify({ skills, qualifications, experiences, location, openToWork }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Search failed')
@@ -132,6 +133,23 @@ export default function Home() {
             onRemove={(tag) => removeTag(setExperiences, tag)}
             colorClass="bg-orange-100 text-orange-700"
           />
+
+          <div className="mb-5">
+            <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
+              <div
+                onClick={() => setOpenToWork((v) => !v)}
+                className={`relative w-11 h-6 rounded-full transition-colors ${openToWork ? 'bg-green-500' : 'bg-gray-200'}`}
+              >
+                <span
+                  className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${openToWork ? 'translate-x-5' : 'translate-x-0'}`}
+                />
+              </div>
+              <span className="text-sm font-semibold text-gray-700">Open to Work only</span>
+              {openToWork && (
+                <span className="text-xs font-medium text-green-700 bg-green-100 px-2 py-0.5 rounded-full">#OpenToWork</span>
+              )}
+            </label>
+          </div>
 
           <div className="mb-5">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Location</label>
